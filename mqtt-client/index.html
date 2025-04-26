@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MQTT Client</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -91,7 +92,7 @@
         <div class="connection-form" id="connectionForm">
             <div class="form-group">
                 <label>Broker URL:</label>
-                <input type="text" id="brokerUrl" placeholder="ws://localhost:1883" value="ws://localhost:1883">
+                <input type="text" id="brokerUrl" placeholder="ws://localhost:1884" value="ws://localhost:1884">
             </div>
             <div class="form-group">
                 <label>Client ID:</label>
@@ -118,7 +119,6 @@
     </div>
 
     <script>
-        const mqtt = require('mqtt');
         let client = null;
 
         // Generate random client ID if not provided

@@ -1,11 +1,22 @@
 const aedes = require('aedes')()
 const { createServer } = require('aedes-server-factory')
+const WebSocket = require('websocket-stream')
+const http = require('http')
 const port = 1883
+const wsPort = 1884
 
-const server = createServer(aedes)
+// Create TCP server
+const tcpServer = createServer(aedes)
+tcpServer.listen(port, function () {
+  console.log('MQTT Broker running on TCP port:', port)
+})
 
-server.listen(port, function () {
-  console.log('MQTT Broker running on port:', port)
+// Create HTTP server for WebSocket
+const httpServer = http.createServer()
+WebSocket.createServer({ server: httpServer }, aedes.handle)
+
+httpServer.listen(wsPort, function () {
+  console.log('MQTT Broker running on WebSocket port:', wsPort)
 })
 
 // Handle client connect
