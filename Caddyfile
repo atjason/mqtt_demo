@@ -1,0 +1,45 @@
+# 全局配置
+{
+    # 启用自动 HTTPS
+    auto_https off
+}
+
+# 主域名配置
+demo.com:80 {
+    # 服务器管理界面（子目录）
+    handle /admin/* {
+        root * /path/mqtt_demo/mqtt-server
+        file_server
+    }
+
+    # 服务器管理界面的 WebSocket 代理
+    handle /admin/ws {
+        reverse_proxy localhost:3000 {
+            header_up Host {http.request.host}
+            header_up X-Real-IP {http.request.remote}
+            header_up X-Forwarded-For {http.request.remote}
+            header_up X-Forwarded-Proto {http.request.scheme}
+        }
+    }
+
+    # 客户端界面（子目录）
+    handle /client/* {
+        root * /path/mqtt_demo/mqtt-client
+        file_server
+    }
+
+    # MQTT WebSocket 代理（子目录）
+    handle /mqtt {
+        reverse_proxy localhost:1884 {
+            header_up Host {http.request.host}
+            header_up X-Real-IP {http.request.remote}
+            header_up X-Forwarded-For {http.request.remote}
+            header_up X-Forwarded-Proto {http.request.scheme}
+        }
+    }
+
+    # 其他请求处理
+    handle {
+        respond "Welcome to MQTT Demo" 200
+    }
+} 
