@@ -1,0 +1,13 @@
+{
+  "name": "mqtt-broker",
+  "version": "1.0.0",
+  "description": "MQTT Broker using Aedes",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "aedes": "^0.50.0",
+    "aedes-server-factory": "^0.2.1"
+  }
+} 

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT Server Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .client-list {
+            margin: 20px 0;
+        }
+        .client-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .client-item.selected {
+            background-color: #e0e0e0;
+        }
+        .control-panel {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .color-button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background-color: #dff0d8; }
+        .error { background-color: #f2dede; }
+    </style>
+</head>
+<body>
+    <h1>MQTT Server Management</h1>
+    
+    <div class="client-list" id="clientList">
+        <h2>Connected Clients</h2>
+    </div>
+
+    <div class="control-panel" id="controlPanel">
+        <h2>Control Panel</h2>
+        <p>Select a client to send commands</p>
+        <div>
+            <button class="color-button" style="background-color: #ff9999" onclick="sendColorCommand('#ff9999')">Red</button>
+            <button class="color-button" style="background-color: #99ff99" onclick="sendColorCommand('#99ff99')">Green</button>
+            <button class="color-button" style="background-color: #9999ff" onclick="sendColorCommand('#9999ff')">Blue</button>
+        </div>
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:3000');
+        let selectedClientId = null;
+
+        ws.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            
+            if (message.type === 'clients-update') {
+                updateClientList(message.data);
+            } else if (message.type === 'error') {
+                showStatus(message.message, 'error');
+            } else if (message.type === 'command-sent' && message.success) {
+                showStatus('Command sent successfully', 'success');
+            }
+        };
+
+        function updateClientList(clients) {
+            const clientList = document.getElementById('clientList');
+            clientList.innerHTML = '<h2>Connected Clients</h2>';
+            
+            clients.forEach(client => {
+                const div = document.createElement('div');
+                div.className = `client-item ${client.id === selectedClientId ? 'selected' : ''}`;
+                div.textContent = `Client ID: ${client.id}`;
+                div.onclick = () => selectClient(client.id);
+                clientList.appendChild(div);
+            });
+        }
+
+        function selectClient(clientId) {
+            selectedClientId = clientId;
+            document.querySelectorAll('.client-item').forEach(item => {
+                item.classList.remove('selected');
+                if (item.textContent.includes(clientId)) {
+                    item.classList.add('selected');
+                }
+            });
+        }
+
+        function sendColorCommand(color) {
+            if (!selectedClientId) {
+                showStatus('Please select a client first', 'error');
+                return;
+            }
+
+            ws.send(JSON.stringify({
+                clientId: selectedClientId,
+                command: 'setBackgroundColor',
+                payload: color
+            }));
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            setTimeout(() => {
+                status.textContent = '';
+                status.className = 'status';
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 
