@@ -133,10 +133,13 @@
             
             try {
                 client = mqtt.connect(brokerUrl, {
+                    protocol: 'mqtt',
                     clientId: clientId,
                     clean: true,
-                    connectTimeout: 4000,
-                    reconnectPeriod: 1000,
+                    connectTimeout: 10000,
+                    reconnectPeriod: 2000,
+                    keepalive: 60,
+                    resubscribe: true
                 });
 
                 client.on('connect', () => {

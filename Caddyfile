@@ -40,7 +40,7 @@ demo.com {
 
     # MQTT WebSocket 代理（子目录）
     handle /mqtt {
-        reverse_proxy localhost:1884 {
+        reverse_proxy localhost:61884 {
             # 禁用所有头部修改
             header_up -Host
             header_up -X-Real-IP

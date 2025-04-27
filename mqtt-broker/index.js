@@ -13,7 +13,7 @@ tcpServer.listen(port, function () {
 
 // Create HTTP server for WebSocket
 const httpServer = http.createServer()
-WebSocket.createServer({ server: httpServer }, aedes.handle)
+WebSocket.createServer({ server: httpServer, protocol: 'mqtt' }, aedes.handle)
 
 httpServer.listen(wsPort, function () {
   console.log('MQTT Broker running on WebSocket port:', wsPort)
