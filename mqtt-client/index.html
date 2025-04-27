@@ -124,7 +124,7 @@
 
         // Generate random client ID if not provided
         document.getElementById('clientId').value = 'client_' + Math.random().toString(16).substr(2, 8);
-        FingerprintJS.load()
+        FingerprintJS && FingerprintJS.load()
             .then(fp => fp.get())
             .then(result => {
                 document.getElementById('clientId').value = 'client_' + result.visitorId.slice(-8)

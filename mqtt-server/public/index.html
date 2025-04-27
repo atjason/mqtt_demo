@@ -66,7 +66,7 @@
     <div id="status" class="status"></div>
 
     <script>
-        const ws = new WebSocket('ws://mqtt.yigeyi.top/admin');
+        const ws = new WebSocket('ws://mqtt.yigeyi.top/admin/ws');
         let selectedClientId = null;
 
         ws.onmessage = (event) => {
