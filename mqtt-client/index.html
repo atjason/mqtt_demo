@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MQTT Client</title>
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script src="./fingerprint.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -122,7 +123,12 @@
         let client = null;
 
         // Generate random client ID if not provided
-        document.getElementById('clientId').value = 'mobile_client_' + Math.random().toString(16).substr(2, 8);
+        document.getElementById('clientId').value = 'client_' + Math.random().toString(16).substr(2, 8);
+        FingerprintJS.load()
+            .then(fp => fp.get())
+            .then(result => {
+                document.getElementById('clientId').value = 'client_' + result.visitorId.slice(-8)
+            })
 
         document.getElementById('connectBtn').addEventListener('click', connect);
         document.getElementById('disconnectBtn').addEventListener('click', disconnect);
