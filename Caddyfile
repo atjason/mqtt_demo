@@ -10,6 +10,7 @@ demo.com:80 {
     handle /admin/* {
         root * /path/mqtt_demo/mqtt-server
         file_server
+        try_files {path} /index.html
     }
 
     # 服务器管理界面的 WebSocket 代理
@@ -22,10 +23,10 @@ demo.com:80 {
         }
     }
 
-    # 客户端界面（子目录）
     handle /client/* {
         root * /path/mqtt_demo/mqtt-client
         file_server
+        try_files {path} /index.html
     }
 
     # MQTT WebSocket 代理（子目录）
@@ -38,8 +39,7 @@ demo.com:80 {
         }
     }
 
-    # 其他请求处理
     handle {
-        respond "Welcome to MQTT Demo" 200
+        redir / /client/ permanent
     }
 } 
