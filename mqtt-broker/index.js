@@ -2,8 +2,8 @@ const aedes = require('aedes')()
 const { createServer } = require('aedes-server-factory')
 const WebSocket = require('websocket-stream')
 const http = require('http')
-const port = 1883
-const wsPort = 1884
+const port = 61883
+const wsPort = 61884
 
 // Create TCP server
 const tcpServer = createServer(aedes)

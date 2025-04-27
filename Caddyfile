@@ -1,11 +1,16 @@
 # 全局配置
 {
     # 启用自动 HTTPS
-    auto_https off
+    auto_https on
+    # 配置 TLS 证书
+    tls {
+        protocols tls1.2 tls1.3
+        ciphers TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+    }
 }
 
 # 主域名配置
-demo.com:80 {
+demo.com {
     # 服务器管理界面（子目录）
     handle /admin/* {
         root * /path/mqtt_demo/mqtt-server
@@ -20,9 +25,13 @@ demo.com:80 {
             header_up X-Real-IP {http.request.remote}
             header_up X-Forwarded-For {http.request.remote}
             header_up X-Forwarded-Proto {http.request.scheme}
+            # WebSocket 特定配置
+            header_up Connection {>Connection}
+            header_up Upgrade {>Upgrade}
         }
     }
 
+    # 客户端界面（子目录）
     handle /client/* {
         root * /path/mqtt_demo/mqtt-client
         file_server
@@ -32,13 +41,30 @@ demo.com:80 {
     # MQTT WebSocket 代理（子目录）
     handle /mqtt {
         reverse_proxy localhost:1884 {
-            header_up Host {http.request.host}
-            header_up X-Real-IP {http.request.remote}
-            header_up X-Forwarded-For {http.request.remote}
-            header_up X-Forwarded-Proto {http.request.scheme}
+            # 禁用所有头部修改
+            header_up -Host
+            header_up -X-Real-IP
+            header_up -X-Forwarded-For
+            header_up -X-Forwarded-Proto
+            # WebSocket 特定配置
+            header_up Connection {>Connection}
+            header_up Upgrade {>Upgrade}
+            # MQTT 特定配置
+            header_up Sec-WebSocket-Protocol mqtt
+            # 禁用压缩
+            header_up Accept-Encoding identity
+            # 禁用缓冲
+            flush_interval -1
+            # 禁用超时
+            transport http {
+                read_timeout 0
+                write_timeout 0
+                dial_timeout 0
+            }
         }
     }
 
+    # 根路径重定向到客户端
     handle {
         redir / /client/ permanent
     }

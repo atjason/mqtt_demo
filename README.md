@@ -22,8 +22,8 @@ This project demonstrates a simple MQTT-based communication system with three co
 ## Port Configuration
 
 - MQTT Broker:
-  - TCP Port: 1883 (for server connections)
-  - WebSocket Port: 1884 (for browser clients)
+  - TCP Port: 61883 (for server connections)
+  - WebSocket Port: 61884 (for browser clients)
 - Server WebSocket: 3000 (for management interface)
 - Client Development Server: 8000 (Python HTTP server)
 
@@ -36,8 +36,8 @@ This project demonstrates a simple MQTT-based communication system with three co
    npm start
    ```
    The broker will start listening on:
-   - TCP port 1883 for MQTT connections
-   - WebSocket port 1884 for browser clients
+   - TCP port 61883 for MQTT connections
+   - WebSocket port 61884 for browser clients
 
 2. Start the Server:
    ```bash
@@ -46,7 +46,7 @@ This project demonstrates a simple MQTT-based communication system with three co
    npm start
    ```
    The server will:
-   - Connect to MQTT broker on port 1883
+   - Connect to MQTT broker on port 61883
    - Start WebSocket server on port 3000
 
 3. Start the Client:
@@ -64,7 +64,7 @@ This project demonstrates a simple MQTT-based communication system with three co
 
 2. Open the mobile client:
    - URL: http://localhost:8000
-   - Default broker URL: ws://localhost:1884
+   - Default broker URL: ws://localhost:61884
    - A random client ID will be generated automatically
 
 3. To control a client:

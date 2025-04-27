@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const mqtt = require('mqtt');
 
 const WS_PORT = 3000;
-const MQTT_BROKER_URL = 'mqtt://localhost:1883';
+const MQTT_BROKER_URL = 'mqtt://localhost:61883';
 
 // Connect to MQTT broker
 const mqttClient = mqtt.connect(MQTT_BROKER_URL);
